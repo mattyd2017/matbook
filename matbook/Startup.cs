@@ -1,14 +1,17 @@
-﻿using Microsoft.Owin;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartupAttribute(typeof(matbook.Startup))]
+[assembly: OwinStartup(typeof(matbook.Startup1))]
+
 namespace matbook
 {
-    public partial class Startup
+    public class Startup1
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
+            app.MapSignalR();
         }
     }
 }

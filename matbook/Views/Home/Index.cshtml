@@ -1,31 +1,88 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
-
+﻿
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h1>Matts Book</h1>
+    <p>Mats social Network Social Network</p>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <form class="pad-bottom" data-bind="visible: !signedIn(), submit: signIn">
+                <div class="form-group">
+                    <label for="username">Sign In</label>
+                    <input class="form-control" type="text" name="username" id="username" placeholder="Enter your userame" />
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+                <br />
+            </form>
+
+            <div data-bind="visible: signedIn">
+                <p>You are signed in as <strong data-bind="text: username"></strong></p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div data-bind="visible: notifications().length > 0, foreach: notifications">
+                <div class="summary alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <p data-bind="text: $data"></p>
+                </div>
+            </div>
+
+            <div class="new-post pad-bottom" data-bind="visible: signedIn">
+                <form data-bind="submit: writePost">
+                    <div class="form-group">
+                        <label for="message">Write a new post:</label>
+                        <textarea class="form-control" name="message" id="message" placeholder="New post"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+
+            <ul class="posts list-unstyled" data-bind="foreach: posts">
+                <li>
+                    <p>
+                        <span data-bind="text: username" class="username"></span><br />
+                    </p>
+                    <p>
+                        <span data-bind="text: message"></span>
+                    </p>
+
+                    <p class="no-pad-bottom date-posted">Posted <span data-bind="text: moment(date).calendar()" /></p>
+
+                    <div class="comments" data-bind="visible: $parent.signedIn() || comments().length > 0">
+                        <ul class="list-unstyled" data-bind="foreach: comments, visible: comments().length > 0">
+                            <li>
+
+                                <p>
+                                    <span class="commentor" data-bind="text: username"></span>
+                                    <span data-bind="text: message"></span>
+                                </p>
+                                <p class=" no-pad-bottom date-posted">Posted <span data-bind="text: moment(date).calendar()" /></p>
+                            </li>
+                        </ul>
+
+                        <form class="add-comment" data-bind="visible: $parent.signedIn, submit: addComment">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="comment" placeholder="Add a comment" />
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-default" type="submit">Add Comment</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
 </div>
+
+@section scripts {
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/knockout-3.4.2.js"></script>
+    <script src="~/Scripts/board.js"></script>
+}
